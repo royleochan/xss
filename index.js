@@ -9,15 +9,12 @@ async function reqListener(req, res) {
   const url = req.url;
   const method = req.method;
 
-  if (url === "/") {
-    res.writeHead(200, { "content-type": "text/html" });
-    fs.createReadStream("public/index.html").pipe(res);
-  } else if (url === "/post" && method == "GET") {
+if (url === "/post" && method == "GET") {
     const posts = await db.getPosts();
     res.writeHead(200, { "content-type": "application/json" });
     res.write(JSON.stringify(posts));
     res.end();
-  } else if (url === "/post/create" && method == "POST") {
+} else if (url === "/post/create" && method == "POST") {
     var formData = "";
 
     req.on("data", function (data) {
@@ -30,7 +27,12 @@ async function reqListener(req, res) {
       await db.addPost(title, content);
       res.end();
     });
-  }
+} else {
+  res.writeHead(200, { "content-type": "text/html" });
+  fs.createReadStream("public/index.html").pipe(res);
+} 
+
+
 }
 
 const server = http.createServer(reqListener);

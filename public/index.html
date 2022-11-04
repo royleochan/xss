@@ -1,8 +1,18 @@
 <!DOCTYPE html>
 <html>
-  <head> </head>
+  <head> 
+    <title>Secure Blogging Website</title>
+  </head>
   <body>
     <h1>Secure Blogging Application :)</h1>
+    <h2>Welcome back:
+      <script> // FOR DOCUMENT WRITE, CAN EXECUTE NEW SCRIPTS eg. <script>Malicous Code
+          // var pos=document.URL.indexOf("context=")+8;
+          var pos = document.URL.indexOf("context=")+8;
+          // console.log(decodeURIComponent(document.URL.substring(pos)))
+          document.write(decodeURIComponent(document.URL.substring(pos)));
+      </script>
+    </h2>
     <h2>Create post:</h2>
     <form
       action="/post/create"
