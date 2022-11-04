@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head> </head>
+  <body>
+    <h1>Secure Blogging Application :)</h1>
+    <h2>Create post:</h2>
+    <form
+      action="/post/create"
+      method="POST"
+      target="dummyframe"
+      enctype="text/plain"
+    >
+      <label for="title">Title:</label><br />
+      <input type="text" id="title" name="title" /><br /><br />
+      <label for="content">Content:</label><br />
+      <input type="text" id="content" name="content" /><br /><br />
+      <input type="submit" value="Submit" />
+    </form>
+    <h2>All posts:</h2>
+    <ul id="posts"></ul>
+    <script>
+      const ul = document.getElementById("posts");
+      const container = document.createElement("div");
+      const url = "/post";
+
+      fetch(url)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          let posts = data;
+
+          posts.map(function (post) {
+            let li = document.createElement("li");
+            let title = document.createElement("h3");
+            let content = document.createElement("p");
+
+            title.innerHTML = `${post.title}`;
+            content.innerHTML = `${post.content}`;
+
+            li.appendChild(title);
+            li.appendChild(content);
+            container.appendChild(li);
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      console.log(container);
+      ul.appendChild(container);
+    </script>
+  </body>
+  <iframe name="dummyframe" id="dummyframe" style="display: none"></iframe>
+</html>
