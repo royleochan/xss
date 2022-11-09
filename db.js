@@ -35,4 +35,8 @@ async function getPosts() {
   return await Post.findAll();
 }
 
-module.exports = { addPost, getPosts };
+async function countPost(title) {
+  return await Post.count({ where: { title: title } });
+}
+
+module.exports = { addPost, getPosts, countPost };
