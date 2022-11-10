@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html>
-  <head> 
+  <head>
     <title>Secure Blogging Website</title>
   </head>
   <body>
     <h1>Secure Blogging Application :)</h1>
-    <h2>Welcome back:
-      <script> // FOR DOCUMENT WRITE, CAN EXECUTE NEW SCRIPTS eg. <script>Malicous Code
-          // var pos=document.URL.indexOf("context=")+8;
-          var pos = document.URL.indexOf("context=")+8;
-          // console.log(decodeURIComponent(document.URL.substring(pos)))
-          document.write(decodeURIComponent(document.URL.substring(pos)));
+    <h2>
+      Welcome back:
+      <script>
+        // FOR DOCUMENT WRITE, CAN EXECUTE NEW SCRIPTS eg. <script>Malicous Code
+        // var pos=document.URL.indexOf("context=")+8;
+        var pos = document.URL.indexOf("context=") + 8;
+        // console.log(decodeURIComponent(document.URL.substring(pos)))
+        document.write(decodeURIComponent(document.URL.substring(pos)));
       </script>
     </h2>
     <h2>Create post:</h2>
@@ -45,8 +47,8 @@
             let title = document.createElement("h3");
             let content = document.createElement("p");
 
-            title.innerHTML = `${post.title}`;
-            content.innerHTML = `${post.content}`;
+            li.insertAdjacentHTML("afterbegin", `<div>${post.content}</div>`);
+            li.insertAdjacentHTML("afterbegin", `<h3>${post.title}</h3>`);
 
             li.appendChild(title);
             li.appendChild(content);
@@ -57,7 +59,6 @@
           console.log(error);
         });
 
-      console.log(container);
       ul.appendChild(container);
     </script>
   </body>
