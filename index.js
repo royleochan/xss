@@ -8,6 +8,11 @@ const PORT = 3000;
 async function reqListener(req, res) {
   const url = req.url;
   const method = req.method;
+  //Regex to check for search post
+  var expression = /\/post\/search\/\?search=(.+)/gi;
+  var regex = new RegExp(expression);
+  var search = regex.exec(url);
+  console.log("search regex:", search, url);
 
   if (url === "/post" && method == "GET") {
     const posts = await db.getPosts();
@@ -29,6 +34,22 @@ async function reqListener(req, res) {
       await db.addPost(title, content);
       res.end();
     });
+  } else if (search) {
+    var title = search[1];
+    console.log("title", title);
+    var result = await db.countPost(title);
+    console.log("result", result);
+    if (result !== 0) {
+      res.writeHead(200, { "content-type": "text/html" });
+      res.write(title);
+      res.end();
+    } else {
+      res.writeHead(404, { "content-type": "text/html" });
+      res.write(title, "utf-8", () => {
+        console.log(title);
+      });
+      res.end();
+    }
   } else {
     res.writeHead(200, { "content-type": "text/html" });
     fs.createReadStream("public/index.html").pipe(res);
