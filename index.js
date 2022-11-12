@@ -27,7 +27,9 @@ async function reqListener(req, res) {
     req.on("end", async function () {
       const fields = formData.split("\n");
       const title = fields[0].split("=")[1];
-      const content = fields[1].split("=")[1];
+      let index = fields[1].indexOf("=");
+      const content = fields[1].slice(index + 1, fields[1].length);
+
       await db.addPost(title, content);
       res.end();
     });
