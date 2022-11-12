@@ -64,27 +64,23 @@
   <script>
     var param, search_res;
     param = /\?search=(.*)/.exec(decodeURI(location.search));
-
-    function searchFunction() {
+    console.log("PARAM", param);
+    async function searchFunction() {
       var post_url = "/post/search/" + param[0];
-      console.log(post_url);
-      fetch(post_url)
-        .then((response) => {
-          // console.log(response.text());
-          return response.text();
-        })
-        .then((response) => {
-          console.log(response);
-          var search_response = document.getElementById("search_response");
-          if (response.ok) {
-            search_response.innerHTML = response + " Does exist";
-          } else {
-            search_response.innerHTML = response + " Does not exist";
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      console.log("POST URL", post_url);
+      try {
+        const resp = await fetch(post_url);
+        let search_response = document.getElementById("search_response");
+        const title = await resp.text();
+        console.log("TITLE", title);
+        if (resp.ok) {
+          search_response.innerHTML = title + " - Does exist";
+        } else {
+          search_response.innerHTML = title + " - Does not exist";
+        }
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     if (param) {

@@ -12,7 +12,6 @@ async function reqListener(req, res) {
   var expression = /\/post\/search\/\?search=(.+)/gi;
   var regex = new RegExp(expression);
   var search = regex.exec(url);
-  console.log("search regex:", search, url);
 
   if (url === "/post" && method == "GET") {
     const posts = await db.getPosts();
@@ -33,19 +32,16 @@ async function reqListener(req, res) {
       res.end();
     });
   } else if (search) {
-    var title = search[1];
-    console.log("title", title);
+    var title = decodeURI(search[1]);
     var result = await db.countPost(title);
-    console.log("result", result);
+    console.log("Number of posts:", result);
     if (result !== 0) {
       res.writeHead(200, { "content-type": "text/html" });
-      res.write(title);
+      res.write(title, "utf-8");
       res.end();
     } else {
       res.writeHead(404, { "content-type": "text/html" });
-      res.write(title, "utf-8", () => {
-        console.log(title);
-      });
+      res.write(title, "utf-8");
       res.end();
     }
   } else {
