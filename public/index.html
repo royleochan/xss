@@ -16,12 +16,7 @@
       </script>
     </h2>
     <h2>Create post:</h2>
-    <form
-      action="/post/create"
-      method="POST"
-      target="dummyframe"
-      enctype="text/plain"
-    >
+    <form action="/post/create" method="POST" target="dummyframe">
       <label for="title">Title:</label><br />
       <input type="text" id="title" name="title" /><br /><br />
       <label for="content">Content:</label><br />
@@ -47,8 +42,21 @@
             let title = document.createElement("h3");
             let content = document.createElement("p");
 
-            li.insertAdjacentHTML("afterbegin", `<div>${post.content}</div>`);
-            li.insertAdjacentHTML("afterbegin", `<h3>${post.title}</h3>`);
+            // vulnerable version
+            title.innerHTML = decodeURIComponent(
+              post.title.replace(/\+/g, " ")
+            );
+            content.innerHTML = decodeURIComponent(
+              post.content.replace(/\+/g, " ")
+            );
+
+            // safe version
+            // title.textContent = decodeURIComponent(
+            //   post.title.replace(/\+/g, " ")
+            // );
+            // content.textContent = decodeURIComponent(
+            //   post.content.replace(/\+/g, " ")
+            // );
 
             li.appendChild(title);
             li.appendChild(content);
@@ -62,45 +70,45 @@
       ul.appendChild(container);
     </script>
 
-  <script>
-    var param, search_res;
-    param = /\?search=(.*)/.exec(decodeURI(location.search));
+    <script>
+      var param, search_res;
+      param = /\?search=(.*)/.exec(decodeURI(location.search));
 
-    function searchFunction() {
-      var post_url = "/post/search/" + param[0];
-      console.log(post_url);
-      fetch(post_url)
-        .then((response) => {
-          // console.log(response.text());
-          return response.text();
-        })
-        .then((response) => {
-          console.log(response);
-          var search_response = document.getElementById("search_response");
-          if (response.ok) {
-            search_response.innerHTML = response + " Does exist";
-          } else {
-            search_response.innerHTML = response + " Does not exist";
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    }
+      function searchFunction() {
+        var post_url = "/post/search/" + param[0];
+        console.log(post_url);
+        fetch(post_url)
+          .then((response) => {
+            // console.log(response.text());
+            return response.text();
+          })
+          .then((response) => {
+            console.log(response);
+            var search_response = document.getElementById("search_response");
+            if (response.ok) {
+              search_response.innerHTML = response + " Does exist";
+            } else {
+              search_response.innerHTML = response + " Does not exist";
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
 
-    if (param) {
-      searchFunction();
-    }
-  </script>
+      if (param) {
+        searchFunction();
+      }
+    </script>
 
-  <h2>Post exists:</h2>
-  <form onsubmit="searchFunction()">
-    <label for="title">Title:</label><br />
-    <input type="search" id="search" name="search" /><br /><br />
-    <input type="submit" value="Submit" />
-  </form>
-  <h2>Search results:</h2>
-  <p id="search_response" name="search_response"></p>
+    <h2>Post exists:</h2>
+    <form onsubmit="searchFunction()">
+      <label for="title">Title:</label><br />
+      <input type="search" id="search" name="search" /><br /><br />
+      <input type="submit" value="Submit" />
+    </form>
+    <h2>Search results:</h2>
+    <p id="search_response" name="search_response"></p>
   </body>
   <iframe name="dummyframe" id="dummyframe" style="display: none"></iframe>
 </html>
