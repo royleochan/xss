@@ -38,15 +38,24 @@ async function reqListener(req, res) {
   } else if (search) {
     const title = decodeURI(search[1]);
     const result = await db.countPost(title);
-    console.log("Title before:", title);
+
+    if (result !== 0) {
+      res.writeHead(200, { "content-type": "text/html" });
+      res.write(title, "utf-8");
+      res.end();
+    } else {
+      res.writeHead(404, { "content-type": "text/html" });
+      res.write(title, "utf-8");
+      res.end();
+    }
+    /* Safe version
     const cleanTitle = sanitizeHtml(title, {
       allowedTags: ["img"],
       allowedAttributes: {
         img: ["src"],
       },
     });
-    console.log("Title after:", cleanTitle);
-
+    
     if (result !== 0) {
       res.writeHead(200, { "content-type": "text/html" });
       res.write(cleanTitle, "utf-8");
@@ -56,6 +65,7 @@ async function reqListener(req, res) {
       res.write(cleanTitle, "utf-8");
       res.end();
     }
+    */
   } else {
     res.writeHead(200, { "content-type": "text/html" });
     fs.createReadStream("public/index.html").pipe(res);
