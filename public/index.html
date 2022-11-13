@@ -6,14 +6,14 @@
   <body>
     <h1>Secure Blogging Application :)</h1>
     <h2>
-      Welcome back:
-      <script>
+      Welcome back: John
+      <!-- <script>
         // FOR DOCUMENT WRITE, CAN EXECUTE NEW SCRIPTS eg. <script>Malicous Code
         // var pos=document.URL.indexOf("context=")+8;
         var pos = document.URL.indexOf("context=") + 8;
         // console.log(decodeURIComponent(document.URL.substring(pos)))
         document.write(decodeURIComponent(document.URL.substring(pos)));
-      </script>
+      </script> -->
     </h2>
     <h2>Create post:</h2>
     <form action="/post/create" method="POST" target="dummyframe">
@@ -73,20 +73,27 @@
     <script>
       var param, search_res;
       param = /\?search=(.*)/.exec(decodeURI(location.search));
-      console.log("PARAM", param);
+
       async function searchFunction() {
         var post_url = "/post/search/" + param[0];
-        console.log("POST URL", post_url);
         try {
           const resp = await fetch(post_url);
           let search_response = document.getElementById("search_response");
           const title = await resp.text();
-          console.log("TITLE", title);
+
+          /* Vulnerable Version */
           if (resp.ok) {
-            search_response.innerHTML = title + " - Does exist";
+            search_response.innerText = title + " - Does exist";
           } else {
-            search_response.innerHTML = title + " - Does not exist";
+            search_response.innerText = title + " - Does not exist";
           }
+          /* Safe Version
+          if (resp.ok) {
+            search_response.innerText = title + " - Does exist";
+          } else {
+            search_response.innerText = title + " - Does not exist";
+          }
+          */
         } catch (err) {
           console.log(err);
         }
