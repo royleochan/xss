@@ -83,9 +83,9 @@
 
           /* Vulnerable Version */
           if (resp.ok) {
-            search_response.innerText = title + " - Does exist";
+            search_response.innerHTML = title + " - Does exist";
           } else {
-            search_response.innerText = title + " - Does not exist";
+            search_response.innerHTML = title + " - Does not exist";
           }
           /* Safe Version
           if (resp.ok) {
