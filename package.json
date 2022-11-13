@@ -9,6 +9,7 @@
   "author": "Roy Chan",
   "license": "ISC",
   "dependencies": {
+    "sanitize-html": "^2.7.3",
     "sequelize": "^6.25.3",
     "sqlite3": "^5.1.2"
   }

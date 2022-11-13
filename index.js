@@ -3,6 +3,8 @@ const http = require("http");
 
 const db = require("./db.js");
 
+const sanitizeHtml = require("sanitize-html");
+
 const PORT = 3000;
 
 async function reqListener(req, res) {
@@ -34,16 +36,24 @@ async function reqListener(req, res) {
       res.end();
     });
   } else if (search) {
-    var title = decodeURI(search[1]);
-    var result = await db.countPost(title);
-    console.log("Number of posts:", result);
+    const title = decodeURI(search[1]);
+    const result = await db.countPost(title);
+    console.log("Title before:", title);
+    const cleanTitle = sanitizeHtml(title, {
+      allowedTags: ["img"],
+      allowedAttributes: {
+        img: ["src"],
+      },
+    });
+    console.log("Title after:", cleanTitle);
+
     if (result !== 0) {
       res.writeHead(200, { "content-type": "text/html" });
-      res.write(title, "utf-8");
+      res.write(cleanTitle, "utf-8");
       res.end();
     } else {
       res.writeHead(404, { "content-type": "text/html" });
-      res.write(title, "utf-8");
+      res.write(cleanTitle, "utf-8");
       res.end();
     }
   } else {
