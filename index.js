@@ -39,6 +39,7 @@ async function reqListener(req, res) {
     const title = decodeURI(search[1]);
     const result = await db.countPost(title);
 
+    /* Vulnerable Version */
     if (result !== 0) {
       res.writeHead(200, { "content-type": "text/html" });
       res.write(title, "utf-8");
@@ -48,14 +49,14 @@ async function reqListener(req, res) {
       res.write(title, "utf-8");
       res.end();
     }
-    /* Safe version
+    /* Safe Version
     const cleanTitle = sanitizeHtml(title, {
       allowedTags: ["img"],
       allowedAttributes: {
         img: ["src"],
       },
     });
-    
+
     if (result !== 0) {
       res.writeHead(200, { "content-type": "text/html" });
       res.write(cleanTitle, "utf-8");
