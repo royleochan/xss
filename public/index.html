@@ -6,14 +6,19 @@
   <body>
     <h1>Secure Blogging Application :)</h1>
     <h2>
-      Welcome back: John
-      <!-- <script>
-        // FOR DOCUMENT WRITE, CAN EXECUTE NEW SCRIPTS eg. <script>Malicous Code
-        // var pos=document.URL.indexOf("context=")+8;
-        var pos = document.URL.indexOf("context=") + 8;
-        // console.log(decodeURIComponent(document.URL.substring(pos)))
-        document.write(decodeURIComponent(document.URL.substring(pos)));
+      <!--Normal Payload: http://localhost:3000/index.html?context=John--> 
+      <!-- Malicious Payload: http://localhost:3000/index.html?context=<script>alert(document.cookie);</script> -->
+
+      <!-- Welcome back: 
+      <script>  //Vulnerable
+        var pos = document.URL.indexOf("context=") + 8;   //SOURCE
+        document.write(decodeURIComponent(document.URL.substring(pos)));   //SINK
       </script> -->
+      Welcome back:  <span id="contentholder"></span>
+      <script> //Sanitised
+        var pos=document.URL.indexOf("context=")+8;
+        document.getElementById("contentholder").textContent = document.URL.substring(pos,document.URL.length);
+      </script>
     </h2>
     <h2>Create post:</h2>
     <form action="/post/create" method="POST" target="dummyframe">
